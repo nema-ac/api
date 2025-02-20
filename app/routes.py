@@ -29,3 +29,7 @@ def check_wallet(wallet_id: str):
     except Exception as e:
         logger.error(f"Error checking wallet {wallet_id}: {str(e)}")
         return jsonify({'error': 'An unexpected error occurred'}), 500
+
+@main.route('/healthz')
+def health_check():
+    return jsonify({'status': 'healthy'}), 200
