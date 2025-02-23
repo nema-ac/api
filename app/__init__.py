@@ -67,7 +67,9 @@ def create_app():
         r"/*": {
             "origins": [
                 "http://localhost:3000",
-                "https://nema-frontend.fly.dev"
+                "https://nema-frontend.fly.dev",
+                "https://nema.ac",
+                "https://www.nema.ac"
             ]
         }
     })
