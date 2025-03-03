@@ -44,5 +44,5 @@ primary_region = 'ewr'
   source = "db_data"
 
 [env]
-  CLEAN_SLATE = "true" # if true will clear the database on startup
+  CLEAN_SLATE = "false" # if true will clear the database on startup
   DATABASE_URL = "/data/wallet_db.db"
