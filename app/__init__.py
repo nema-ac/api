@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
+from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 import csv
 import os
 import logging
@@ -10,6 +12,10 @@ logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
+
+# Initialize extensions
+db = SQLAlchemy()
+migrate = Migrate()
 
 # Global variables
 wallet_data = {}
@@ -61,6 +67,22 @@ def load_wallet_data():
 
 def create_app():
     app = Flask(__name__)
+
+    # Use persistent volume in production, local file in development
+    if os.environ.get('FLY_APP_NAME'):
+        data_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'data'))
+    else:
+        data_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'instance'))
+
+    os.makedirs(data_path, exist_ok=True)
+    db_path = os.path.join(data_path, 'wallets.db')
+
+    app.config['SQLALCHEMY_DATABASE_URI'] = f'sqlite:////{db_path}'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+    # Initialize extensions
+    db.init_app(app)
+    migrate.init_app(app, db)
 
     # Enable CORS
     CORS(app, resources={

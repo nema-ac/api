@@ -16,5 +16,14 @@ RUN poetry config virtualenvs.create false \
 # Copy application code
 COPY . .
 
+# Create a startup script
+RUN echo '#!/bin/bash\n\
+# Run migrations\n\
+flask db upgrade\n\
+\n\
+# Start the application\n\
+exec gunicorn --config gunicorn_config.py run:app' > /app/start.sh \
+    && chmod +x /app/start.sh
+
 # Command to run the application
-CMD ["gunicorn", "--config", "gunicorn_config.py", "run:app"] 
+CMD ["/app/start.sh"]

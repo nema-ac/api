@@ -38,3 +38,7 @@ primary_region = 'ewr'
   cpus = 1
   memory = '256mb'
   size = 'shared-cpu-1x'
+
+[mounts]
+  source = "nema_data"
+  destination = "/data"
