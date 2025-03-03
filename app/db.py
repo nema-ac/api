@@ -18,25 +18,26 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
-def init_db():
+def init_db(app):
     try:
-        db = get_db()
-        
-        # Create tables
-        db.execute('''
-            CREATE TABLE IF NOT EXISTS sol_eth_wallets (
-                sol_wallet TEXT PRIMARY KEY,
-                eth_wallet TEXT NOT NULL,
-                linked_at TEXT NOT NULL
-            )
-        ''')
-        
-        db.commit()
-        logger.info("Database initialized successfully")
+        with app.app_context():
+            db = get_db()
+            
+            # Create tables
+            db.execute('''
+                CREATE TABLE IF NOT EXISTS sol_eth_wallets (
+                    sol_wallet TEXT PRIMARY KEY,
+                    eth_wallet TEXT NOT NULL,
+                    linked_at TEXT NOT NULL
+                )
+            ''')
+            
+            db.commit()
+            logger.info("Database initialized successfully")
     except Exception as e:
         logger.error(f"Error initializing database: {str(e)}")
         raise
-    
+
 def get_linked_wallet_from_sol(sol_wallet: str) -> str | None:
     try:
         db = get_db()
