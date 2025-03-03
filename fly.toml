@@ -45,4 +45,4 @@ primary_region = 'ewr'
 
 [env]
   CLEAN_SLATE = "true" # if true will clear the database on startup
-  DATABASE_URL = "wallet_data.db"
+  DATABASE_URL = "/data/wallet_db.db"

@@ -11,6 +11,7 @@ CLEAN_SLATE = os.getenv('CLEAN_SLATE', 'false').lower() == 'true'
 
 def get_db():
     if 'db' not in g:
+        logger.info(f"Connecting to database: {DATABASE}")
         g.db = sqlite3.connect(DATABASE)
         g.db.row_factory = sqlite3.Row
     return g.db
