@@ -6,7 +6,7 @@ from solders.pubkey import Pubkey
 from solders.signature import Signature
 
 from . import logger, wallet_data
-from .db import get_linked_wallet_from_sol
+from .db import get_linked_wallet_from_sol, link_sol_eth_wallet
 
 main = Blueprint('main', __name__)
 
@@ -48,6 +48,7 @@ def link_wallet():
     solana_address = data.get('solanaAddress')
     eth_address = data.get('ethAddress')
     signature_b64 = data.get('signature')
+    message = data.get('message')
     
     if not all([solana_address, eth_address, signature_b64]):
         return jsonify({"success": False, "message": "Missing required fields"}), 400
@@ -74,6 +75,11 @@ def link_wallet():
 
         if not is_valid:
             return jsonify({"success": False, "message": "Invalid signature"}), 400
+        
+        # Store the wallet link in the DB
+        link_sol_eth_wallet(solana_address, eth_address)
+
+        return jsonify({"success": True,"message": "Wallets linked successfully!"})
 
     except Exception as e:
         logger.error(f"Error verifying signature: {str(e)}")

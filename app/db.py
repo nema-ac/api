@@ -39,19 +39,24 @@ def init_db(app):
         raise
 
 def get_linked_wallet_from_sol(sol_wallet: str) -> str | None:
+    """
+    Get the Ethereum wallet address for a given Solana wallet address.
+    """
     try:
         db = get_db()
-        db.execute('SELECT eth_wallet FROM sol_eth_wallets WHERE sol_wallet = ?', (sol_wallet,))
-        result = db.fetchone()
+        cursor = db.cursor()  # Create a cursor
+        cursor.execute('SELECT eth_wallet FROM sol_eth_wallets WHERE sol_wallet = ?', (sol_wallet,))
+        result = cursor.fetchone()
         return result[0] if result else None
     except Exception as e:
         logger.error(f"Error getting linked wallet from sol: {str(e)}")
         raise
 
-def link_wallet(sol_wallet: str, eth_wallet: str) -> None:
+def link_sol_eth_wallet(sol_wallet: str, eth_wallet: str) -> None:
     try:
         db = get_db()
-        db.executemany(
+        cursor = db.cursor()  # Create a cursor
+        cursor.executemany(
             'INSERT OR REPLACE INTO sol_eth_wallets (sol_wallet, eth_wallet, linked_at) VALUES (?, ?, ?)',
             [(sol_wallet, eth_wallet, datetime.now().isoformat())]
         )
