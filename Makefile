@@ -6,6 +6,11 @@ _ERROR := "\033[31m[%s]\033[0m %s\n" # Red text for "printf"
 CURRENT_BRANCH = $(shell git branch --show-current) 
 COMMIT = $(shell git rev-parse --short=12 HEAD)
 
+run-dev:
+	poetry run python run.py
+
+run-prod:
+	poetry run gunicorn --config gunicorn_config.py run:app
 
 deploy:
 	@echo "Deploying to fly.io"
