@@ -1,3 +1,4 @@
+import os
 import sqlite3
 from datetime import datetime
 
@@ -5,7 +6,8 @@ from flask import g
 
 from . import logger
 
-DATABASE = 'wallet_data.db'
+DATABASE = os.getenv('DATABASE_URL', 'wallet_data.db')
+CLEAN_SLATE = os.getenv('CLEAN_SLATE', 'false').lower() == 'true'
 
 def get_db():
     if 'db' not in g:
@@ -22,6 +24,10 @@ def init_db(app):
     try:
         with app.app_context():
             db = get_db()
+            if CLEAN_SLATE:
+                db.execute('DROP TABLE IF EXISTS sol_eth_wallets')
+                db.commit()
+                logger.info("Database dropped and recreated")
             
             # Create tables
             db.execute('''
@@ -65,3 +71,4 @@ def link_sol_eth_wallet(sol_wallet: str, eth_wallet: str) -> None:
     except Exception as e:
         logger.error(f"Error linking wallets: {str(e)}")
         raise 
+    
