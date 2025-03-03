@@ -1,9 +1,11 @@
 # app/routes.py
+import base64
+
 from flask import Blueprint, jsonify, request
-from . import wallet_data, logger, get_linked_wallet_from_sol
 from solders.pubkey import Pubkey
 from solders.signature import Signature
-import base64
+
+from . import get_linked_wallet_from_sol, logger, wallet_data
 
 main = Blueprint('main', __name__)
 

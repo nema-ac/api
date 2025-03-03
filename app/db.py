@@ -1,5 +1,8 @@
 import sqlite3
+from datetime import datetime
+
 from flask import g
+
 from . import logger
 
 DATABASE = 'wallet_data.db'
@@ -23,7 +26,8 @@ def init_db():
         db.execute('''
             CREATE TABLE IF NOT EXISTS sol_eth_wallets (
                 sol_wallet TEXT PRIMARY KEY,
-                eth_wallet TEXT NOT NULL
+                eth_wallet TEXT NOT NULL,
+                linked_at TEXT NOT NULL
             )
         ''')
         
@@ -47,8 +51,8 @@ def link_wallet(sol_wallet: str, eth_wallet: str) -> None:
     try:
         db = get_db()
         db.executemany(
-            'INSERT OR REPLACE INTO sol_eth_wallets (sol_wallet, eth_wallet) VALUES (?, ?)',
-            [(sol_wallet, eth_wallet)]
+            'INSERT OR REPLACE INTO sol_eth_wallets (sol_wallet, eth_wallet, linked_at) VALUES (?, ?, ?)',
+            [(sol_wallet, eth_wallet, datetime.now().isoformat())]
         )
         db.commit()
         logger.info(f"Linked {sol_wallet} <-> {eth_wallet} in database")
