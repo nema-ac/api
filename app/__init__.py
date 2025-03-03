@@ -77,9 +77,16 @@ def create_app():
     try:
         # Load wallet data when app starts
         load_wallet_data()
+        
+        # Initialize database
+        from . import db
+        db.init_db()
+        
+        # Register database close function
+        app.teardown_appcontext(db.close_db)
+        
     except Exception as e:
         logger.error(f"Application startup failed: {str(e)}")
-        # You might want to decide whether to raise this error or continue with empty wallet_data
         wallet_data = {}
 
     # Register blueprints
