@@ -83,9 +83,6 @@ def create_app():
         from . import db
         db.init_db(app)
         
-        # Insert wallet data into database
-        db.insert_wallet_data(wallet_data)
-        
         # Register database close function
         app.teardown_appcontext(db.close_db)
         

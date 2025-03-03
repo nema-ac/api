@@ -5,7 +5,8 @@ from flask import Blueprint, jsonify, request
 from solders.pubkey import Pubkey
 from solders.signature import Signature
 
-from . import get_linked_wallet_from_sol, logger, wallet_data
+from . import logger, wallet_data
+from .db import get_linked_wallet_from_sol
 
 main = Blueprint('main', __name__)
 
