@@ -38,3 +38,11 @@ primary_region = 'ewr'
   cpus = 1
   memory = '256mb'
   size = 'shared-cpu-1x'
+
+[mounts]
+  destination = "/data"
+  source = "db_data"
+
+[env]
+  CLEAN_SLATE = "false" # if true will clear the database on startup
+  DATABASE_URL = "/data/wallet_db.db"

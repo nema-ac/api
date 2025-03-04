@@ -176,3 +176,6 @@ site
 # PyPI configuration file
 **/.pypirc
 fly.toml
+
+# Database
+wallet_data.db
