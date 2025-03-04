@@ -24,18 +24,18 @@ def check_wallet(wallet_id: str):
         if not wallet_id:
             logger.warning("Empty wallet ID provided")
             return jsonify({'error': 'Wallet ID cannot be empty'}), 400
-            
+
         exists = wallet_id in wallet_data
         projected_amount = wallet_data.get(wallet_id, {}).get('projected_amount', 0) if exists else 0
-        
+
         # for now multiply by .9 to account for historical holders claiming %
         projected_amount = projected_amount * 0.9
         projected_amount = round(projected_amount, 2)
-        
+
         logger.info(f"Wallet check - ID: {wallet_id}, Exists: {exists}, Projected Amount: {projected_amount}")
-        
+
         return jsonify({'exists': exists, 'projected_amount': projected_amount})
-        
+
     except Exception as e:
         logger.error(f"Error checking wallet {wallet_id}: {str(e)}")
         return jsonify({'error': 'An unexpected error occurred'}), 500
@@ -49,13 +49,17 @@ def link_wallet():
     eth_address = data.get('ethAddress')
     signature_b64 = data.get('signature')
     message = data.get('message')
-    
+
     if not all([solana_address, eth_address, signature_b64]):
         return jsonify({"success": False, "message": "Missing required fields"}), 400
-    
+
     if solana_address not in wallet_data:
         return jsonify({"success": False,"message": "Solana wallet is not eligible for airdrop" }), 400
-        
+
+    expected_message = f"I am linking my Solana wallet {solana_address} to Ethereum wallet {eth_address} for the NEMA airdrop."
+    if message != expected_message:
+        return jsonify({"success": False, "message": "Invalid message format"}), 400
+
     try:
         # Convert base64 signature to bytes
         signature_bytes = base64.b64decode(signature_b64)
@@ -65,7 +69,7 @@ def link_wallet():
 
         # Convert message to bytes
         message_bytes = message.encode('utf-8')
-        
+
         try:
             signature = Signature.from_bytes(signature_bytes)
             is_valid = signature.verify(public_key, message_bytes)
@@ -75,7 +79,7 @@ def link_wallet():
 
         if not is_valid:
             return jsonify({"success": False, "message": "Invalid signature"}), 400
-        
+
         # Store the wallet link in the DB
         link_sol_eth_wallet(solana_address, eth_address)
 
