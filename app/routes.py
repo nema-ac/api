@@ -27,9 +27,6 @@ def check_wallet(wallet_id: str):
 
         exists = wallet_id in wallet_data
         projected_amount = wallet_data.get(wallet_id, {}).get('projected_amount', 0) if exists else 0
-
-        # for now multiply by .9 to account for historical holders claiming %
-        projected_amount = projected_amount * 0.9
         projected_amount = round(projected_amount, 2)
 
         logger.info(f"Wallet check - ID: {wallet_id}, Exists: {exists}, Projected Amount: {projected_amount}")
