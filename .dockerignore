@@ -179,3 +179,4 @@ fly.toml
 
 # Database
 wallet_data.db
+prod_sol_eth_wallets.db

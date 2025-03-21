@@ -13,7 +13,7 @@ run-prod:
 	poetry run gunicorn --config gunicorn_config.py run:app
 
 save-db:
-	fly ssh console -a nema-api -C "cat /data/wallet_db.db" > prod_wallet_db.sqlite
+	fly ssh console -a nema-api -C "cat /data/wallet_db.db" > prod_sol_eth_wallets.db
 
 deploy:
 	@echo "Deploying to fly.io"
