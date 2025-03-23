@@ -40,6 +40,9 @@ def check_wallet(wallet_id: str):
 
 @main.route('/link-wallet', methods=['POST'])
 def link_wallet():
+    # For now turn off the route and return a 404
+    return jsonify({"success": False, "message": "Route is disabled"}), 404
+
     data = request.json
 
     solana_address = data.get('solanaAddress')
