@@ -31,7 +31,7 @@ def check_wallet(wallet_id: str):
 
         logger.info(f"Wallet check - ID: {wallet_id}, Exists: {exists}, Projected Amount: {nema_balance}")
 
-        return jsonify({'exists': exists, 'nema_balance': nema_balance})
+        return jsonify({'exists': exists, 'projected_amount': nema_balance})
 
     except Exception as e:
         logger.error(f"Error checking wallet {wallet_id}: {str(e)}")
