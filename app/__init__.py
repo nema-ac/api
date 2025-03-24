@@ -19,7 +19,7 @@ AIRDROP_PERCENTAGE = 0.6      # 60% of total supply for airdrop
 
 def load_wallet_data():
     global wallet_data
-    csv_path = os.path.join('static', 'drop', 'wallets.csv')
+    csv_path = os.path.join('static', 'drop', 'mapped_nema_airdrop_35.csv')
 
     if not os.path.exists(csv_path):
         logger.error(f"Wallet data file not found at: {csv_path}")
@@ -37,16 +37,16 @@ def load_wallet_data():
 
             # First pass: calculate total balance
             try:
-                total_balance = sum(float(row['balance']) for row in all_rows)
+                total_balance = sum(float(row['nema_balance']) for row in all_rows)
                 if total_balance <= 0:
                     logger.error("Total balance must be greater than 0")
                     raise ValueError("Total balance must be greater than 0")
 
                 # Second pass: calculate projected amounts
                 wallet_data = {
-                    row['wallet']: {
-                        'balance': float(row['balance']),
-                        'projected_amount': (float(row['balance']) / total_balance) * TOTAL_SUPPLY * AIRDROP_PERCENTAGE
+                    row['sol_wallet']: {
+                        'balance': float(row['nema_balance']),
+                        # 'projected_amount': (float(row['nema_balance']) / total_balance) * TOTAL_SUPPLY * AIRDROP_PERCENTAGE
                     }
                     for row in all_rows
                 }

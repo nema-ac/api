@@ -26,12 +26,12 @@ def check_wallet(wallet_id: str):
             return jsonify({'error': 'Wallet ID cannot be empty'}), 400
 
         exists = wallet_id in wallet_data
-        projected_amount = wallet_data.get(wallet_id, {}).get('projected_amount', 0) if exists else 0
-        projected_amount = round(projected_amount, 2)
+        nema_balance = wallet_data.get(wallet_id, {}).get('balance', 0) if exists else 0
+        nema_balance = round(nema_balance, 2)
 
-        logger.info(f"Wallet check - ID: {wallet_id}, Exists: {exists}, Projected Amount: {projected_amount}")
+        logger.info(f"Wallet check - ID: {wallet_id}, Exists: {exists}, Projected Amount: {nema_balance}")
 
-        return jsonify({'exists': exists, 'projected_amount': projected_amount})
+        return jsonify({'exists': exists, 'nema_balance': nema_balance})
 
     except Exception as e:
         logger.error(f"Error checking wallet {wallet_id}: {str(e)}")

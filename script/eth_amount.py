@@ -51,13 +51,21 @@ def calculate_total_eth():
     print(f"Airdrop Percent:     {claimed_percent:.2%}, Total: {claimed_amount:,}")
     print(f"Team Wallet Percent: {(team_wallet_amount / total_nema_supply):.2%}, Total: {team_wallet_amount:,}")
     
+    # We want to inflate the claimed percent to be 35% from whatever it is
+    factor = .35 / claimed_percent
+    print(f"Factor: {factor:.2f}")
+    
+    
     # Write mapped_nema_airdrop to a CSV file in the form:
     # sol_wallet, eth_wallet, worm_balance, nema_balance
-    with open('./static/drop/mapped_nema_airdrop.csv', 'w', newline='') as f:
+    factoredTotal = 0
+    with open('./static/drop/mapped_nema_airdrop_35.csv', 'w', newline='') as f:
         writer = csv.writer(f)
         writer.writerow(['sol_wallet', 'eth_wallet', 'worm_balance', 'nema_balance'])
         for sol_wallet, data in eth_balances.items():
-            writer.writerow([sol_wallet, data['eth_wallet'], data['balance'], round(data['balance']*0.6)])
+            writer.writerow([sol_wallet, data['eth_wallet'], data['balance'], round(data['balance']*0.6*factor)])
+            factoredTotal += round(data['balance']*0.6*factor)
+    print(f"Factored Total: {factoredTotal:,}")
 
 
 if __name__ == "__main__":
